@@ -1,24 +1,7 @@
 import React, {createContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../services/api';
-
-interface User {
-  login: string;
-  name: string;
-  bio: string;
-  followers: number;
-  following: number;
-  avatar_url: string;
-  created_at: Date;
-}
-
-interface AuthContextData {
-  signed: boolean;
-  user: User | null;
-  error: string;
-  signIn(username: string): Promise<void>;
-  signOut(): void;
-}
+import {User, AuthContextData} from '../models';
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
@@ -38,8 +21,6 @@ export const AuthProvider: React.FC = ({children}) => {
   }, []);
 
   async function signIn(username: string): Promise<void> {
-    const storageUser = await AsyncStorage.getItem('@overviewGitHub:user');
-    console.log(storageUser, 'storage hi');
     const response = await api.get(`/users/${username}`);
 
     const {data, status} = response;
